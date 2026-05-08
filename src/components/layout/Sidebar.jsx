@@ -30,6 +30,10 @@ const Sidebar = () => {
     setLogoutOpen(false)
   }
 
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ')
+  const emailFallback = user?.email ? user.email.split('@')[0] : ''
+  const displayName = fullName || user?.username || emailFallback || 'Invité'
+
   return (
     <aside className="sidebar">
       <div>
@@ -56,7 +60,7 @@ const Sidebar = () => {
       <div className="sidebar-footer">
         <div className="user-card">
           <div>
-            <span>{user?.username || 'Invité'}</span>
+            <span>{displayName}</span>
             <small>{user?.email || 'guest@mizaniyati.app'}</small>
           </div>
         </div>

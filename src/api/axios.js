@@ -12,7 +12,7 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('mizaniyati_token')
+  const token = localStorage.getItem('token') || localStorage.getItem('mizaniyati_token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -23,6 +23,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error?.response?.status === 401) {
+      localStorage.removeItem('token')
       localStorage.removeItem('mizaniyati_token')
       localStorage.removeItem('mizaniyati_user')
       if (window.location.pathname !== '/login') {

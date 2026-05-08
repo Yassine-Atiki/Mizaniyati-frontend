@@ -14,6 +14,12 @@ export const useAsync = (asyncFn, immediate = true) => {
         setData(response)
         return response
       } catch (err) {
+        if (err?.response?.status === 404) {
+          console.warn('API 404: ressource introuvable, retour d\'une liste vide.')
+          setData([])
+          setError(null)
+          return []
+        }
         setError(err)
         throw err
       } finally {

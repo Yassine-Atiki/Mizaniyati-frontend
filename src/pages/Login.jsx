@@ -69,6 +69,9 @@ const Login = () => {
           <Button type="submit" disabled={loading}>
             {loading ? 'Connexion…' : 'Entrer dans Mizaniyati'}
           </Button>
+          <Button type="button" variant="ghost" onClick={() => navigate('/signup')}>
+            Créer un compte
+          </Button>
           <Button
             type="button"
             variant="outline"

@@ -12,7 +12,8 @@ export const AuthContext = createContext({
   logout: () => {},
 })
 
-const TOKEN_KEY = 'mizaniyati_token'
+const TOKEN_KEY = 'token'
+const LEGACY_TOKEN_KEY = 'mizaniyati_token'
 const USER_KEY = 'mizaniyati_user'
 const DEMO_TOKEN = 'demo-token'
 const DEMO_USER = {
@@ -23,7 +24,9 @@ const DEMO_USER = {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY))
+  const [token, setToken] = useState(
+    localStorage.getItem(TOKEN_KEY) || localStorage.getItem(LEGACY_TOKEN_KEY),
+  )
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem(USER_KEY)
     return saved ? JSON.parse(saved) : null
@@ -64,12 +67,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (credentials) => {
     const response = await authApi.login(credentials)
-    const authToken = response?.token || response?.accessToken || response?.jwt
+    const authToken = response?.token
     if (!authToken) {
       throw new Error('Token manquant dans la réponse de connexion.')
     }
     setToken(authToken)
     localStorage.setItem(TOKEN_KEY, authToken)
+    localStorage.setItem(LEGACY_TOKEN_KEY, authToken)
 
     if (response?.user) {
       setUser(response.user)
@@ -83,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     setToken(DEMO_TOKEN)
     setUser(DEMO_USER)
     localStorage.setItem(TOKEN_KEY, DEMO_TOKEN)
+    localStorage.setItem(LEGACY_TOKEN_KEY, DEMO_TOKEN)
     localStorage.setItem(USER_KEY, JSON.stringify(DEMO_USER))
   }, [])
 
@@ -90,6 +95,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null)
     setUser(null)
     localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(LEGACY_TOKEN_KEY)
     localStorage.removeItem(USER_KEY)
   }, [])
 
