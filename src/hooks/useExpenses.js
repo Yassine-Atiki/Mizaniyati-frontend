@@ -6,7 +6,12 @@ import { demoExpenses } from '../utils/demoData'
 
 export const useExpenses = (filters = {}) => {
   const { isDemo } = useAuth()
-  const { data, setData, loading, error, execute } = useAsync(() => expenseApi.fetchExpenses(filters))
+  const filtersKey = useMemo(() => JSON.stringify(filters), [filters])
+  const fetchExpenses = useCallback(
+    () => expenseApi.fetchExpenses(filters),
+    [filtersKey],
+  )
+  const { data, setData, loading, error, execute } = useAsync(fetchExpenses)
   const demoData = useMemo(() => demoExpenses, [])
 
   const create = useCallback(

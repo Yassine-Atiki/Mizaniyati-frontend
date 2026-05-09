@@ -6,7 +6,12 @@ import { demoIncome } from '../utils/demoData'
 
 export const useIncome = (filters = {}) => {
   const { isDemo } = useAuth()
-  const { data, setData, loading, error, execute } = useAsync(() => incomeApi.fetchIncome(filters))
+  const filtersKey = useMemo(() => JSON.stringify(filters), [filters])
+  const fetchIncome = useCallback(
+    () => incomeApi.fetchIncome(filters),
+    [filtersKey],
+  )
+  const { data, setData, loading, error, execute } = useAsync(fetchIncome)
   const demoData = useMemo(() => demoIncome, [])
 
   const create = useCallback(
