@@ -47,7 +47,7 @@ const Income = () => {
             date: item.date?.slice(0, 10) || '',
             type: item.type,
             frequency: item.frequency,
-            isRecurring: item.isRecurring,
+            isRecurring: Boolean(item.isRecurring ?? item.recurring),
           }
         : defaultForm,
     )
@@ -55,7 +55,13 @@ const Income = () => {
   }
 
   const handleSubmit = async () => {
-    const payload = { ...form, amount: Number(form.amount) }
+    const recurringValue = Boolean(form.isRecurring)
+    const payload = {
+      ...form,
+      amount: Number(form.amount),
+      isRecurring: recurringValue,
+      recurring: recurringValue,
+    }
     if (editing) {
       await update(editing.id, payload)
     } else {
@@ -109,7 +115,7 @@ const Income = () => {
               <span>
                 <Badge variant="success">{item.frequency}</Badge>
               </span>
-              <span>{item.isRecurring ? 'Oui' : 'Non'}</span>
+              <span>{item.isRecurring ?? item.recurring ? 'Oui' : 'Non'}</span>
               <span className="row-actions">
                 <Button variant="ghost" onClick={() => openModal(item)}>
                   <Pencil size={14} />
