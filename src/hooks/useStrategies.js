@@ -43,6 +43,17 @@ export const useStrategies = () => {
     [setData],
   )
 
+  const deactivate = useCallback(
+    async (id) => {
+      const updated = await strategyApi.deactivateStrategy(id)
+      setData((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, isActive: false } : item)),
+      )
+      return updated
+    },
+    [setData],
+  )
+
   if (isDemo) {
     return {
       strategies: demoData,
@@ -53,6 +64,7 @@ export const useStrategies = () => {
       create: async () => {},
       update: async () => {},
       activate: async () => {},
+      deactivate: async () => {},
     }
   }
 
@@ -65,5 +77,6 @@ export const useStrategies = () => {
     create,
     update,
     activate,
+    deactivate,
   }
 }

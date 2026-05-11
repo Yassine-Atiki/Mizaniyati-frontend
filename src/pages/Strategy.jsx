@@ -20,7 +20,7 @@ const defaultForm = {
 }
 
 const Strategy = () => {
-  const { strategies, activeStrategy, loading, error, create, update, activate } = useStrategies()
+  const { strategies, activeStrategy, loading, error, create, update, activate, deactivate } = useStrategies()
   const { expenses } = useExpenses()
   const { income } = useIncome()
   const [modalOpen, setModalOpen] = useState(false)
@@ -36,7 +36,7 @@ const Strategy = () => {
     setForm(
       strategy
         ? {
-            name: strategy.name,
+            name: strategy.name || '',
             savingPercentage: strategy.savingPercentage,
             needsPercentage: strategy.needsPercentage,
             wantsPercentage: strategy.wantsPercentage,
@@ -83,7 +83,11 @@ const Strategy = () => {
             <p>Stratégie active</p>
           </div>
           <div className="gauges">
-            <Gauge label="Saving" value={activeStrategy.savingPercentage} color="#5b4bff" />
+            <Gauge
+              label="Saving"
+              value={activeStrategy.savingPercentage}
+              color="#5b4bff"
+            />
             <Gauge label="Needs" value={activeStrategy.needsPercentage} color="#2fd6ff" />
             <Gauge label="Wants" value={activeStrategy.wantsPercentage} color="#ff7d6b" />
           </div>
@@ -130,8 +134,11 @@ const Strategy = () => {
                 <Button variant="ghost" onClick={() => openModal(strategy)}>
                   Modifier
                 </Button>
-                <Button variant="outline" onClick={() => activate(strategy.id)}>
-                  Activer
+                <Button 
+                  variant={strategy.isActive ? 'ghost' : 'outline'} 
+                  onClick={() => strategy.isActive ? deactivate(strategy.id) : activate(strategy.id)}
+                >
+                  {strategy.isActive ? 'Désactiver' : 'Activer'}
                 </Button>
               </div>
             </Card>
@@ -155,11 +162,13 @@ const Strategy = () => {
         <div className="form-grid">
           <Input
             label="Nom"
+            name="name"
             value={form.name}
             onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
           />
           <Input
             label="Saving %"
+            name="savingPercentage"
             type="number"
             value={form.savingPercentage}
             onChange={(event) =>
@@ -168,12 +177,14 @@ const Strategy = () => {
           />
           <Input
             label="Needs %"
+            name="needsPercentage"
             type="number"
             value={form.needsPercentage}
             onChange={(event) => setForm((prev) => ({ ...prev, needsPercentage: event.target.value }))}
           />
           <Input
             label="Wants %"
+            name="wantsPercentage"
             type="number"
             value={form.wantsPercentage}
             onChange={(event) => setForm((prev) => ({ ...prev, wantsPercentage: event.target.value }))}

@@ -16,6 +16,11 @@ export const updateStrategy = async (id, payload) => {
 }
 
 export const setActiveStrategy = async (id) => {
-  const { data } = await apiClient.post(`/budget-strategies/${id}/activate`)
+  const { data } = await apiClient.patch(`/budget-strategies/${id}/activate`)
+  return data
+}
+
+export const deactivateStrategy = async (id) => {
+  const { data } = await apiClient.patch(`/budget-strategies/${id}/deactivate`)
   return data
 }

@@ -45,7 +45,10 @@ const Budget = () => {
   }
 
   const handleSubmit = async () => {
-    const payload = { ...form, limitAmount: Number(form.limitAmount) }
+    const payload = {
+      ...form,
+      limitAmount: Number(form.limitAmount),
+    }
     if (editing) {
       await update(editing.id, payload)
     } else {
